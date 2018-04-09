@@ -1,4 +1,4 @@
-# zeld v0.0.1
+# zeld v0.0.2
 
 A naff little Zeldalike implemented in Moonscript for the TIC-80.  One
 day, it may grow into something more interesting, but for now, it's
