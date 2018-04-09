@@ -3,6 +3,14 @@
 -- desc:   nonsense zeldalike with splash
 -- script: moon
 
+rate=1/24
+
+sleep=(n)->
+	now=time()
+	stop=now+n*1000
+	while now<stop
+		now=time()
+
 rdcol=(n)->
 	{
 		b0:(peek (0x03fc0+(3*n))),
@@ -36,16 +44,18 @@ s=256
 atk=false
 
 class Sprt
-	new:(s,x,y,sc,w,h)=>
-		@s=s
+	new:(i,a,x,y,sc,w,h)=>
+		@i=i
+		@a=a
 		@x=x
 		@y=y
 		@sc=sc
-		@f=0
+		@fl=0
 		@rt=0
 		@w=w
 		@h=h
-		@a=false
+		@fr=0
+		@atk=false
 	gx:=>return @x
 	gy:=>return @y
 	l:=>@x-=1
@@ -56,15 +66,27 @@ class Sprt
 		@x=nx
 		@y=ny
 	sp:(n)=>@s=n
-	flip:=>@f=not @f
+	flip:=>@fl=not @fl
 	rot:=>@rt=not @rt
+	attack:=>
+		@fr=1
+		@atk=true
+	ga:=>return @atk
 	draw:=>
-		spr @s,@x,@y,14,@sc,@f,@rt,@w,@h
+		if @atk
+			spr @a[@fr],@x,@y,14,@sc,@fl,@rt,@w,@h
+			@fr+=1
+			if @fr==#@a
+				@atk=false
+				@fr=0
+		else
+			spr @i[@fr+1],@x,@y,14,@sc,@fl,@rt,@w,@h
+			@fr=(@fr+1)%#@i
 
-p=Sprt(256,40,40,1,1,1)
+p=Sprt({256,256,257,257},{258,258,259,259,260,260},40,40,1,1,1)
 
 export TIC=->
-	if now<0-- 5000 -- splash here
+	if now<0 -- 5000 -- splash here
 		cls 0
 		now=time()
 		spr 1,64,52,0,2,0,0,8,2
@@ -76,6 +98,7 @@ export TIC=->
 				wrcol 3,col.b0,col.b1,col.b2
 			if si<16 then si=si+1
 	else
+		sleep rate
 		cls 0
 		wrcol 3,wht.b0,wht.b1,wht.b2
 		-- game here
@@ -83,8 +106,7 @@ export TIC=->
 		if btn 1 then p\d!
 		if btn 2 then p\l!
 		if btn 3 then p\r!
-		if btn 4
-			print "a pressed",120,68,3
+		if btn 4 then p\attack!
 		if btn 5
 			print "b pressed",120,68,3
 		p\draw!
@@ -107,9 +129,10 @@ export TIC=->
 
 -- <SPRITES>
 -- 000:0003300000033000003333000303303030033003000330000030030000300300
--- 001:0003300300033030003333000303300030033000000330000030030000300300
--- 002:0003300000033003003333300303300030033000000330000030030000300300
--- 003:0003300000033000003333300303300330033000000330000030030000300300
+-- 001:0000000000033000000330000033330003033030300330030030030000300300
+-- 002:0003300300033030003333000303300030033000000330000030030000300300
+-- 003:0003300000033003003333300303300030033000000330000030030000300300
+-- 004:0003300000033000003333300303300330033000000330000030030000300300
 -- </SPRITES>
 
 -- <WAVES>
