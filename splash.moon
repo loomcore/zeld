@@ -31,7 +31,7 @@ export splash=->
 							wrcol 3,0xff,0xff,0xff
 						else
 							wrcol 3,col.b0,col.b1,col.b2
-						spr 1,64,52,0,2,0,0,8,2
+						spr 1,64,52,14,2,0,0,7,2
 		else
 			cls 0
 			wrcol 3,0xff,0xff,0xff
