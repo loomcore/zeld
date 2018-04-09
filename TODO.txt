@@ -1,0 +1,6 @@
+- B button action
+- Collision detection
+- Attack effect
+- Map implementation
+  - Half-width cells?  Quarter-width with scale * 2?
+- Map scrolling a la Zelda
